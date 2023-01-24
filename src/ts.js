@@ -17,11 +17,17 @@ ts.unix.rounded = function (value) {
     return Math.round(ts.unix(value))
 };
 
-ts.time = function (value) {
-    return util.localTime(ts.parse(value));
+ts.zone = function (value) {
+    const date = ts.parse(value);
+    return util.zoneOffset(date);
 };
 
-ts.time.tz = function (value) {
+ts.zone.offset = function (value) {
+    const date = ts.parse(value);
+    return -60000 * date.getTimezoneOffset();
+};
+
+ts.time = function (value) {
     const date = ts.parse(value);
     return util.localTime(date) + util.zoneOffset(date);
 };
@@ -31,11 +37,12 @@ ts.time.utc = function (value) {
     return util.utcTime(date) + 'Z';
 };
 
-ts.date = function (value) {
-    return util.localDate(ts.parse(value));
+ts.time.local = function (value) {
+    const date = ts.parse(value);
+    return util.localTime(date);
 };
 
-ts.date.tz = function (value) {
+ts.date = function (value) {
     const date = ts.parse(value);
     return util.localDate(date) + util.zoneOffset(date);
 };
@@ -45,12 +52,12 @@ ts.date.utc = function (value) {
     return util.utcDate(date) + 'Z';
 };
 
-ts.dateTime = function (value) {
+ts.date.local = function (value) {
     const date = ts.parse(value);
-    return util.localDate(date) + 'T' + util.localTime(date);
+    return util.localDate(date);
 };
 
-ts.dateTime.tz = function (value) {
+ts.dateTime = function (value) {
     const date = ts.parse(value);
     return util.localDate(date) + 'T' + util.localTime(date) + util.zoneOffset(date);
 };
@@ -58,6 +65,11 @@ ts.dateTime.tz = function (value) {
 ts.dateTime.utc = function (value) {
     const date = ts.parse(value);
     return util.utcDate(date) + 'T' + util.utcTime(date) + 'Z';
+};
+
+ts.dateTime.local = function (value) {
+    const date = ts.parse(value);
+    return util.localDate(date) + 'T' + util.localTime(date);
 };
 
 // const _durationMatcher = /^(-?)P?(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)[Dd])?T?(?:(\d+)[Hh])?(?:(\d+)[Mm])?(?:(\d+|\d*\.\d+)[Ss])?(?:(\d+?)ms)?$/;

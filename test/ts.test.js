@@ -5,11 +5,12 @@ const
 
 describe('fua.core.ts', function () {
 
-    test.skip('develop', function () {
-        console.log(ts);
-        console.log(ts.time(NaN));
-        console.log(ts.time.utc());
-        console.log(ts.time.tz());
+    test('develop', function () {
+        // console.log(ts);
+        console.log(ts.zone('2001-06-01'), '~', ts.zone.offset('2001-06-01') + 'ms');
+        // console.log(ts.time(NaN));
+        // console.log(ts.time.utc());
+        // console.log(ts.time.local());
     });
 
     test('should output timestamp in milliseconds', function () {
@@ -44,6 +45,13 @@ describe('fua.core.ts', function () {
             expect(Number.isInteger(ts.unix('2001-01-01T12:00:00.999'))).toBeFalsy();
             expect(Number.isInteger(ts.unix.rounded('2001-01-01T12:00:00.999'))).toBeTruthy();
         });
+
+    });
+
+    describe('zone', function () {
+
+        test('should give timezone information as string');
+        test('should give timezone information in milliseconds');
 
     });
 
