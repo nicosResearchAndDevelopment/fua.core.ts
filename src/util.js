@@ -46,3 +46,10 @@ exports.utcDate = function stringifyUTCDate(date) {
         day = date.getUTCDate().toString().padStart(2, '0');
     return year + '-' + month + '-' + day;
 };
+
+const _durationMatcher = /^(-?)P?(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)[Dd])?T?(?:(\d+)[Hh])?(?:(\d+)[Mm])?(?:(\d+|\d*\.\d+)[Ss])?(?:(\d+?)ms)?$/;
+
+exports.matchDuration = function (value) {
+    const [match, sign, YYYY, MM, DD, hh, mm, ss_ms, ms] = _durationMatcher.exec(value) || [];
+    return match ? {sign, YYYY, MM, DD, hh, mm, ss_ms, ms} : null;
+};

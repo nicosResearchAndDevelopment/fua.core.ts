@@ -5,12 +5,19 @@ const
 
 describe('fua.core.ts', function () {
 
-    test('develop', function () {
+    test.skip('develop', async function () {
         // console.log(ts);
         console.log(ts.zone('2001-06-01'), '~', ts.zone.offset('2001-06-01') + 'ms');
         // console.log(ts.time(NaN));
         // console.log(ts.time.utc());
         // console.log(ts.time.local());
+        console.log(ts.duration('1s'));
+        console.log(ts.time());
+        // await ts.pause(1200);
+        // await ts.pause('1.2s');
+        // await ts.pause('1s200ms');
+        await ts.pause('PT1.2s');
+        console.log(ts.time());
     });
 
     test('should output timestamp in milliseconds', function () {
