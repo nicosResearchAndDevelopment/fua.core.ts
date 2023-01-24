@@ -1,40 +1,106 @@
 const
     util = require('./util.js');
 
-const time = {};
-// const time = function (value) {
-//     return util.parseDate(value).getTime();
-// };
-//
-// time.unix = function (value) {
-//     // return util.parseDate(value).getTime() / 1000;
-//     return time(value) / 1000;
-// };
-//
-// time.unix.rounded = function (value) {
-//     return Math.round(time.unix(value))
+const ts = function (value) {
+    return ts.parse(value).getTime();
+};
+
+ts.parse = function (value) {
+    return (value ?? null) === null ? new Date() : new Date(value);
+};
+
+ts.unix = function (value) {
+    return ts(value) / 1000;
+};
+
+ts.unix.rounded = function (value) {
+    return Math.round(ts.unix(value))
+};
+
+ts.time = function (value) {
+    return util.localTime(ts.parse(value));
+};
+
+ts.time.tz = function (value) {
+    const date = ts.parse(value);
+    return util.localTime(date) + util.zoneOffset(date);
+};
+
+ts.time.utc = function (value) {
+    const date = ts.parse(value);
+    return util.utcTime(date) + 'Z';
+};
+
+ts.date = function (value) {
+    return util.localDate(ts.parse(value));
+};
+
+ts.date.tz = function (value) {
+    const date = ts.parse(value);
+    return util.localDate(date) + util.zoneOffset(date);
+};
+
+ts.date.utc = function (value) {
+    const date = ts.parse(value);
+    return util.utcDate(date) + 'Z';
+};
+
+ts.dateTime = function (value) {
+    const date = ts.parse(value);
+    return util.localDate(date) + 'T' + util.localTime(date);
+};
+
+ts.dateTime.tz = function (value) {
+    const date = ts.parse(value);
+    return util.localDate(date) + 'T' + util.localTime(date) + util.zoneOffset(date);
+};
+
+ts.dateTime.utc = function (value) {
+    const date = ts.parse(value);
+    return util.utcDate(date) + 'T' + util.utcTime(date) + 'Z';
+};
+
+// const _durationMatcher = /^(-?)P?(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)[Dd])?T?(?:(\d+)[Hh])?(?:(\d+)[Mm])?(?:(\d+|\d*\.\d+)[Ss])?(?:(\d+?)ms)?$/;
+// ts.duration = function (value, reference) {
+//     if (typeof value === 'number') return value;
+//     if (typeof value === 'string') {
+//         const [match, sign, YYYY, MM, DD, hh, mm, ss_ms, ms] = _durationMatcher.exec(value) || [];
+//         if (!match) throw new Error('expected duration pattern');
+//         const
+//             date = ts.parse(reference),
+//             years = parseInt(YYYY || 0),
+//             months = parseInt(MM || 0),
+//             days = parseInt(DD || 0),
+//             hours = parseInt(hh || 0),
+//             minutes = parseInt(mm || 0),
+//             seconds = parseInt(ss_ms || 0),
+//             milliseconds = 1000 * (parseFloat(ss_ms || 0) - seconds) + parseInt(ms || 0),
+//             factor = sign === '-' ? -1 : 1,
+//             target = new Date(
+//                 date.getFullYear() + factor * years,
+//                 date.getMonth() + factor * months,
+//                 date.getDate() + factor * days,
+//                 date.getHours() + factor * hours,
+//                 date.getMinutes() + factor * minutes,
+//                 date.getSeconds() + factor * seconds,
+//                 date.getMilliseconds() + factor * milliseconds
+//             );
+//         return target.getTime() - date.getTime();
+//     }
+//     if (value instanceof Date) {
+//         const date = ts.parse(reference);
+//         return value.getTime() - date.getTime();
+//     }
+//     return 0;
 // };
 
-// time.time = null;
-// time.time.local = null;
-// time.time.utc = null;
-// time.date = null;
-// time.dateTime = null;
-
-// time.time = function (value) {
-//     const date = util.parseDate(value);
-//     return util.stringifyTime(date) + util.stringifyZoneOffset(date);
+// ts.pause = function (value) {
+//     const ms = ts.duration(value);
+//     return new Promise((resolve) => {
+//         if (ms >= 0) setTimeout(resolve, ms);
+//         else setImmediate(resolve);
+//     });
 // };
 
-// time.local = function (value) {
-//
-// };
-
-// time.utc = function (value) {
-//
-// };
-
-// TODO
-
-util.sealModule(time);
-module.exports = time;
+util.sealModule(ts);
+module.exports = ts;
