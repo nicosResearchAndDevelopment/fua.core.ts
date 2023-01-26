@@ -1,11 +1,13 @@
-exports.sealModule = function sealModule(target) {
+const util = exports;
+
+util.sealModule = function (target) {
     Object.freeze(target);
     for (const child of Object.values(target)) {
-        if (child instanceof Object) sealModule(child);
+        if (child instanceof Object) util.sealModule(child);
     }
 };
 
-exports.zoneOffset = function stringifyZoneOffset(date) {
+util.zoneOffset = function (date) {
     const
         offset = date.getTimezoneOffset(),
         hour = Math.floor(Math.abs(offset) / 60).toString().padStart(2, '0'),
@@ -13,7 +15,7 @@ exports.zoneOffset = function stringifyZoneOffset(date) {
     return (offset > 0 ? '-' : '+') + hour + ':' + minute;
 };
 
-exports.localTime = function stringifyLocalTime(date) {
+util.localTime = function (date) {
     const
         hour = date.getHours().toString().padStart(2, '0'),
         minute = date.getMinutes().toString().padStart(2, '0'),
@@ -22,7 +24,7 @@ exports.localTime = function stringifyLocalTime(date) {
     return hour + ':' + minute + ':' + second + '.' + millisecond;
 };
 
-exports.utcTime = function stringifyUTCTime(date) {
+util.utcTime = function (date) {
     const
         hour = date.getUTCHours().toString().padStart(2, '0'),
         minute = date.getUTCMinutes().toString().padStart(2, '0'),
@@ -31,7 +33,7 @@ exports.utcTime = function stringifyUTCTime(date) {
     return hour + ':' + minute + ':' + second + '.' + millisecond;
 };
 
-exports.localDate = function stringifyLocalDate(date) {
+util.localDate = function (date) {
     const
         year = date.getFullYear().toString(),
         month = (date.getMonth() + 1).toString().padStart(2, '0'),
@@ -39,7 +41,7 @@ exports.localDate = function stringifyLocalDate(date) {
     return year + '-' + month + '-' + day;
 };
 
-exports.utcDate = function stringifyUTCDate(date) {
+util.utcDate = function (date) {
     const
         year = date.getUTCFullYear().toString(),
         month = (date.getUTCMonth() + 1).toString().padStart(2, '0'),
@@ -49,7 +51,7 @@ exports.utcDate = function stringifyUTCDate(date) {
 
 const _durationMatcher = /^(-?)P?(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)[Dd])?T?(?:(\d+)[Hh])?(?:(\d+)[Mm])?(?:(\d+|\d*\.\d+)[Ss])?(?:(\d+?)ms)?$/;
 
-exports.matchDuration = function (value) {
+util.matchDuration = function (value) {
     const [match, sign, YYYY, MM, DD, hh, mm, ss_ms, ms] = _durationMatcher.exec(value) || [];
     return match ? {sign, YYYY, MM, DD, hh, mm, ss_ms, ms} : null;
 };
