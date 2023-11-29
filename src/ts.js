@@ -132,34 +132,50 @@ ts.dateTime.local = function (value) {
     return util.localDate(date) + 'T' + util.localTime(date);
 };
 
+/** @typedef {Record<'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds', number>} DurationRecord */
+
 /**
- * @param {number | string | Date} [value]
+ * @param {number | string | Date | DurationRecord} [value]
  * @param {number | string | Date} [reference]
  * @returns {number}
  */
 ts.duration = function (value, reference) {
-    const match = typeof value === 'string' && util.matchDuration(value);
-    if (!match) return ts(value) - ts(reference);
-    const
-        date = ts.parse(reference),
-        years = match.YYYY ? parseInt(match.YYYY) : 0,
-        months = match.MM ? parseInt(match.MM) : 0,
-        days = match.DD ? parseInt(match.DD) : 0,
-        hours = match.hh ? parseInt(match.hh) : 0,
-        minutes = match.mm ? parseInt(match.mm) : 0,
-        seconds = match.ss_ms ? parseInt(match.ss_ms) : 0,
-        milliseconds = (match.ss_ms ? 1000 * (parseFloat(match.ss_ms) - seconds) : 0) + (match.ms ? parseInt(match.ms) : 0),
-        factor = match.sign === '-' ? -1 : 1,
-        target = new Date(
-            date.getFullYear() + factor * years,
-            date.getMonth() + factor * months,
-            date.getDate() + factor * days,
-            date.getHours() + factor * hours,
-            date.getMinutes() + factor * minutes,
-            date.getSeconds() + factor * seconds,
-            date.getMilliseconds() + factor * milliseconds
+    if (typeof value === 'object') {
+        if (!value || (value instanceof Date)) return ts(value) - ts(reference);
+        const date   = ts.parse(reference);
+        const target = new Date(
+            date.getFullYear() + (value.years || 0),
+            date.getMonth() + (value.months || 0),
+            date.getDate() + (value.days || 0),
+            date.getHours() + (value.hours || 0),
+            date.getMinutes() + (value.minutes || 0),
+            date.getSeconds() + (value.seconds || 0),
+            date.getMilliseconds() + (value.milliseconds || 0)
         );
-    return target.getTime() - date.getTime();
+        return target.getTime() - date.getTime();
+    } else if (typeof value === 'string') {
+        const match = util.matchDuration(value);
+        if (!match) return ts(value) - ts(reference);
+        const factor = (match.sign === '-') ? -1 : 1;
+        const param  = {};
+        if (match.YYYY) param.years = factor * parseInt(match.YYYY);
+        if (match.MM) param.months = factor * parseInt(match.MM);
+        if (match.DD) param.days = factor * parseInt(match.DD);
+        if (match.hh) param.hours = factor * parseInt(match.hh);
+        if (match.mm) param.minutes = factor * parseInt(match.mm);
+        if (match.ss_ms) {
+            const ss_ms        = factor * parseFloat(match.ss_ms);
+            param.seconds      = Math.trunc(ss_ms);
+            param.milliseconds = ss_ms - param.seconds;
+        }
+        if (match.ms) {
+            param.milliseconds ??= 0;
+            param.milliseconds += factor * parseInt(match.ms);
+        }
+        return ts(param) - ts(reference);
+    } else {
+        return ts(value) - ts(reference);
+    }
 };
 
 /**
