@@ -164,15 +164,12 @@ ts.duration = function (value, reference) {
         if (match.hh) param.hours = factor * parseInt(match.hh);
         if (match.mm) param.minutes = factor * parseInt(match.mm);
         if (match.ss_ms) {
-            const ss_ms        = factor * parseFloat(match.ss_ms);
-            param.seconds      = Math.trunc(ss_ms);
-            param.milliseconds = Math.round(1000 * (ss_ms - param.seconds));
+            const ss_ms   = factor * parseFloat(match.ss_ms);
+            param.seconds = Math.trunc(ss_ms);
+            if (ss_ms !== param.seconds) param.milliseconds = Math.round(1000 * (ss_ms - param.seconds));
         }
-        if (match.ms) {
-            param.milliseconds ??= 0;
-            param.milliseconds += factor * parseInt(match.ms);
-        }
-        return ts(param) - ts(reference);
+        if (match.ms) param.milliseconds = (param.milliseconds || 0) + factor * parseInt(match.ms);
+        return ts.duration(param, reference);
     } else {
         return ts(value) - ts(reference);
     }
