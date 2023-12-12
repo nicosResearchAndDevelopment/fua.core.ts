@@ -166,7 +166,7 @@ ts.duration = function (value, reference) {
         if (match.ss_ms) {
             const ss_ms        = factor * parseFloat(match.ss_ms);
             param.seconds      = Math.trunc(ss_ms);
-            param.milliseconds = ss_ms - param.seconds;
+            param.milliseconds = Math.round(1000 * (ss_ms - param.seconds));
         }
         if (match.ms) {
             param.milliseconds ??= 0;
