@@ -1,1 +1,1 @@
-# @nrd/fua.core.ts
+# @fua/core.ts

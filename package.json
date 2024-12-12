@@ -1,5 +1,5 @@
 {
-  "name": "@nrd/fua.core.ts",
+  "name": "@fua/core.ts",
   "version": "1.0.3",
   "description": "",
   "main": "src/ts.js",
@@ -20,8 +20,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@git02.int.nsc.ag:10022/research/fua/core/ts.git"
+    "url": "ssh://git@github.com:nicosResearchAndDevelopment/fua.core.ts.git"
   },
-  "author": "spetrac@nicos-ag.com",
-  "license": "UNLICENSED"
+  "author": "Simon Petrac <pfoerdie@gmail.com>",
+  "license": "MIT"
 }
