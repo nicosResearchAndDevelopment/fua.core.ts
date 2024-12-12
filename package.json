@@ -1,7 +1,7 @@
 {
   "name": "@fua/core.ts",
   "version": "1.0.3",
-  "description": "",
+  "description": "Simplifies timestamp creation according to ISO 8601 and XSD. Numerical timestamps and duration are also supported.",
   "main": "src/ts.js",
   "files": [
     "src/*"
